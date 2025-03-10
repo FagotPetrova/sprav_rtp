@@ -12,9 +12,9 @@ import {getLenghtByWalls} from "../utils/buildFire";
 
 import RoomWalls from "./RoomWalls";
 import FireSquare from "../components/FireSquare";
-import roomWalls from "./RoomWalls";
-import TestPlane from "../components/TestPlane";
-import { Subtraction } from '@react-three/csg';
+// import RaycasterLine from "../components/RaycasterLine";
+// import TestPlane from "../components/TestPlane";
+
 const Door = ({width, height, position}) => {
     const geometry = new THREE.BoxGeometry(width, height, 0.1);
     const material = new THREE.MeshStandardMaterial({color: '#a1531d'});
@@ -22,30 +22,38 @@ const Door = ({width, height, position}) => {
 };
 
 const Room = ({cameraRef, sceneRef}) => {
-    const [distances, setDistances] = useState([]);
-    const [coords_click, setCoordsClick] = useState(null);
-    const roomWallsRef = useRef();
-    const planeRef = useRef();
-    const floorRef = useRef();
-
+    const [distances,setDistances]=useState()
+    const [coords_click, setCoordsClick] = useState(null)
+    // const [rayStart, setRayStart] = useState(null);
+    // const [rayEnd, setRayEnd] = useState(null);
+    const floorRef = useRef(); // Создаем ref для пола, если нужно
+    // const planeRef = useRef(); // Создаем ref для плоскости
     const [roomParams, setRoomParams] = useState({
         width: 5,
         height: 3,
         depth: 5,
         wallThickness: 0.3,
-        positionX: 0,
-        positionZ: 0,
+        positionX: 0, // Параметр для перемещения по оси X
+        positionZ: 0, // Параметр для перемещения по оси Z
     });
 
     const handleClick = (event) => {
+
         const clickedPoint = createPointFire(event, cameraRef.current, floorRef.current, roomParams, sceneRef);
         if (clickedPoint) {
             const distances = getLenghtByWalls(roomParams, clickedPoint);
-            setDistances(distances);
-            setCoordsClick(clickedPoint);
+            setDistances(distances); // Сохраняем расстояния в состоянии
+            // const start = [cameraRef.current.position.x, cameraRef.current.position.y, cameraRef.current.position.z];
+            setCoordsClick(clickedPoint)
+            getLenghtByWalls(roomParams,clickedPoint)
+
+
+
+            // setRayStart(start);
+            // setRayEnd(clickedPoint);
+
         }
     };
-
     const guiRef = useRef();
 
     useEffect(() => {
@@ -56,8 +64,8 @@ const Room = ({cameraRef, sceneRef}) => {
         guiRef.current.add(roomParams, 'height', 1, 10).name("Высота,(м)").onChange(updateRoom);
         guiRef.current.add(roomParams, 'depth', 1, 10).name("Длина,(м)").onChange(updateRoom);
         guiRef.current.add(roomParams, 'wallThickness', 0.1, 1).name("Ширина стен,(м)").onChange(updateRoom);
-        guiRef.current.add(roomParams, 'positionX', -10, 10).name("Позиция по X").onChange(updateRoom);
-        guiRef.current.add(roomParams, 'positionZ', -10, 10).name("Позиция по Y").onChange(updateRoom);
+        guiRef.current.add(roomParams, 'positionX', -10, 10).name("Позиция по X").onChange(updateRoom); // Параметр перемещения по оси X
+        guiRef.current.add(roomParams, 'positionZ', -10, 10).name("Позиция по Y").onChange(updateRoom); // Параметр перемещения по оси Z
         return () => {
             guiRef.current.destroy();
         };
@@ -66,52 +74,35 @@ const Room = ({cameraRef, sceneRef}) => {
     const updateRoom = () => {
         setRoomParams({...roomParams});
     };
-    // Получение CSG результата
-    // Получение CSG результата
-    const getCSGResult = () => {
-        if (roomWallsRef.current && planeRef.current) {
-            const roomWallsMesh = roomWallsRef.current;
-            const planeMesh = planeRef.current;
 
-            // Используем Subtraction для вычитания
-            return (
-                <Subtraction>
-                    <primitive object={roomWallsMesh} />
-                    <primitive object={planeMesh} />
-                </Subtraction>
-            );
-        }
-        return null;
-    };
-    const result = getCSGResult();
     return (
+
         <>
-            {result}
-            {/* Отображение точки огня, если кликнули */}
-            {coords_click && <FirePoint position={coords_click}/>}
-
-            {/* Стены комнаты */}
-            <RoomWalls ref={roomWallsRef} roomParams={roomParams}/>
-
-            {/* Пол комнаты */}
+            {coords_click && <FirePoint position={coords_click} />}
+            {/*{rayStart && rayEnd && <RaycasterLine start={rayStart} end={rayEnd}/>}*/}
+            {/* Передняя стенка */}
+           <RoomWalls roomParams={roomParams}/>
+            {/* <TestPlane ref={planeRef} onClick={handleClick} />*/}
             <Floor
-                ref={floorRef}
+                ref={floorRef} // Применяем ref к полу
                 width={roomParams.width}
                 depth={roomParams.depth}
                 position={[roomParams.positionX, 0, roomParams.positionZ]}
                 onClick={handleClick}
-                onPointerOver={handlePointerOver}
-                onPointerOut={handlePointerOut}
+                onPointerOver={handlePointerOver} // Добавляем обработчик наведения
+                onPointerOut={handlePointerOut} // Добавляем обработчик выхода
             />
-
-            {/* Плоскость для CSG */}
-            <TestPlane ref={planeRef}/> {/* Отображение квадрата огня, если кликнули */}
-            {coords_click && <FireSquare initialRadius={0.1} position={coords_click} distances={distances}/>}
-
-
+            {/* Дверь */}
+            <Door
+                width={1}
+                height={2}
+                position={[roomParams.positionX, 1, roomParams.positionZ - (roomParams.depth / 2 + roomParams.wallThickness / 2)]}
+            />
+            {coords_click && <FireSquare initialRadius={0.1} position={coords_click} distances={distances} />}
 
         </>
     );
 };
+
 
 export default Room;
