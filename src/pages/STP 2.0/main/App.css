@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.tab_Container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 2px;
+    background-color: white;
+    width: 50%;
+    height: 500px;
+}
+
+.addPole {
+    position: absolute;
+    border: none;
+    width: 30px;
+    height: 30px;
+    background-image: url(/public/image/button_icon/add_pole.png);
+    background-size: cover;
+    cursor: pointer;
+    left: 2%;
+    top: 2%
+
+}
+
+
+.open_modal {
+    position: absolute;
+    border: none;
+    width: 30px;
+    height: 30px;
+    background-image: url(/public/image/button_icon/open_modal.png);
+    background-size: cover;
+    cursor: pointer;
+    left: 10%;
+    top: 15%;
+}
+

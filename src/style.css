@@ -1,0 +1,11 @@
+.content {
+    overflow: hidden;
+    /*margin-top: 60px;*/
+    width: 100vw; /* Полная ширина окна */
+    height: 100vh; /* Полная высота окна */
+    background-color: #ffffff; /* Цвет фона */
+}
+
+body {
+    overflow: hidden
+}

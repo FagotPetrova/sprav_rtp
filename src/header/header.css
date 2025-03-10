@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
+
+* {
+    font-family: "Roboto Serif", serif;
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    min-height: 100vh;
+}
+
+.header {
+    z-index: 1000;
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    background: #4070f4;
+    padding: 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header .logo {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.header ul {
+    position: relative;
+}
+
+header ul li {
+    position: relative;
+    float: left
+}
+
+header ul li a {
+    color: #fff;
+    font-size: 17px;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:5px;
+    transition: 0.3s;
+}
+
+.header ul li a:hover{
+    background: #2a266c;
+}
+.header ul li:hover a i{
+    transition: 0.3s;
+    transform: rotate(-180deg);
+}
+.header ul li ul{
+    position: absolute;
+    left: 0;
+    width: 200px;
+    background: #282828;
+    display: none;
+}
+.header ul li:hover ul{
+    display: block;
+
+}
+.header ul li ul li{
+    position: relative;
+    width: 100%;
+    border:1px solid rgba(0,0,0,0.2);
+}
+
+.subMenu{
+    display: none;
+}
+.subMenu.active{
+    display: block;
+
+}
+@media (max-width:950px){
+    .header{
+        padding: 30px 20px;
+
+    }
+    .header .nav{
+        position: absolute;
+        width: 100%;
+        top:60px;
+        left: 0;
+        background: #282828;
+        display: none;
+    }
+
+    .header.active .nav{
+        display: block;
+    }
+    .header .nav ul li{
+        width: 100%;
+    }
+    .header .nav ul li ul{
+        position: relative;
+        width: 100%;
+        left: 0;
+    }
+    .header .nav ul li:hover ul li{
+        background: #373737;
+
+    }
+    .header ul li ul li a i{
+        transform:rotate(0deg);
+    }
+    .header .toggleBtn{
+        position: relative;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+    .header .toggleBtn::before{
+        position: absolute;
+        content:"";
+        height: 3px;
+        width: 100%;
+        background: #fff;
+        transform: translateY(-10px);
+        box-shadow: 0 10px #fff;
+        transition: 0.3s;
+    }
+    .header .toggleBtn::after{
+        position: absolute;
+        content:"";
+        height: 3px;
+        width: 100%;
+        background: #fff;
+        transform: translateY(10px);
+        transition: 0.3s;
+    }
+    .header.active .toggleBtn::before{
+        transform:rotate(45deg) ;
+        box-shadow: none;
+    }
+
+    .header.active .toggleBtn::after{
+        transform:rotate(-45deg) ;
+        box-shadow: none;
+    }
+
+}

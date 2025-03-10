@@ -1,0 +1,59 @@
+.myModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.myModalContent {
+    overflow: auto;
+    height: 90%;
+    position: relative;
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    min-width: 80%;
+}
+
+.myModalActive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.inputSearch{
+    width: 50%;
+    padding:5px 15px;
+    margin:5px 0;
+    border:1px solid teal;
+}
+/*Закрытие модального окна*/
+.close_modal {
+    position: absolute;
+    border: none;
+    width: 30px;
+    height: 30px;
+    background-image: url(/public/image/button_icon/close.jpg);
+    background-size: cover;
+    cursor: pointer;
+    right: 0;
+    top: 0;
+}
+.all_poles_selected{
+  background-color: red; /* or any other color you prefer */
+}
+.spravochnic {
+    /*display: flex;*/
+    /*align-items: end;*/
+    /*position: absolute;*/
+    /*right: 10px;*/
+    width: 100%;
+    border-width: 2px;
+    border-style: solid;
+}
+.grid {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+}

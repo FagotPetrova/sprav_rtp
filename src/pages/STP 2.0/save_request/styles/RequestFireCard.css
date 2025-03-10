@@ -1,0 +1,37 @@
+
+.App {
+    width: 800px;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+}
+
+.request {
+    display: flex;
+    padding: 15px;
+    border: 2px solid teal;
+    margin-top: 15px;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.request-enter {
+    transform: translateX(-350px);
+}
+
+.request-enter-active {
+    transform: translateX(0px);
+    transition: all 500ms ease-in;
+}
+
+.request-exit {
+    opacity: 1;
+}
+
+.request-exit-active {
+    transform: translateX(-350px);
+    transition: all 500ms ease-in;
+}
