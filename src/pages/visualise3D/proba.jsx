@@ -1,66 +1,55 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import {OrbitControls, OrthographicCamera, PerspectiveCamera} from '@react-three/drei';
-import { Vector3, Plane, Raycaster } from 'three';
+import * as THREE from 'three';
 
-function Sphere({ position }) {
-  return (
-    <mesh position={position}>
-      <sphereGeometry args={[0.125, 30, 30]} />
-      <meshStandardMaterial color={0xffea00} metalness={0} roughness={0} />
-    </mesh>
-  );
-}
+const CubeWithClipping = () => {
+  const cubeSize = 5; // Размер куба
+  const sphereRef = useRef();
 
-function Scene({ cameraRef }) {
-  const [spheres, setSpheres] = React.useState([]);
-  const raycaster = useRef(new Raycaster());
-  const mouse = useRef(new Vector3());
+  // Создаем шесть плоскостей отсечения для граней куба
+  const clippingPlanes = [
+    new THREE.Plane(new THREE.Vector3(1, 0, 0), cubeSize / 2),   // Правая грань
+    new THREE.Plane(new THREE.Vector3(-1, 0, 0), -cubeSize / 2), // Левая грань
+    new THREE.Plane(new THREE.Vector3(0, 1, 0), cubeSize / 2),   // Верхняя грань
+    new THREE.Plane(new THREE.Vector3(0, -1, 0), -cubeSize / 2),  // Нижняя грань
+    new THREE.Plane(new THREE.Vector3(0, 0, 1), cubeSize / 2),    // Передняя грань
+    new THREE.Plane(new THREE.Vector3(0, 0, -1), -cubeSize / 2)   // Задняя грань
+  ];
 
-  const handleClick = (event) => {
-    mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.current.setFromCamera(mouse.current, cameraRef.current);
-
-    const planeNormal = new Vector3();
-    const plane = new Plane();
-    planeNormal.copy(cameraRef.current.position).normalize();
-    plane.setFromNormalAndCoplanarPoint(planeNormal, new Vector3(0, 0, 0));
-
-    const intersectionPoint = new Vector3();
-    raycaster.current.ray.intersectPlane(plane, intersectionPoint);
-
-    setSpheres((prev) => [...prev, intersectionPoint.clone()]);
-  };
-
-  useEffect(() => {
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
-  }, []);
+  // Анимация увеличения шара
+  useFrame(() => {
+    if (sphereRef.current) {
+      sphereRef.current.scale.x += 0.01;
+      sphereRef.current.scale.y += 0.01;
+      sphereRef.current.scale.z += 0.01;
+    }
+  });
 
   return (
     <>
-      <ambientLight intensity={0.333} />
-      <directionalLight position={[0, 50, 0]} intensity={0.8} />
-      <axesHelper args={[20]} />
-      {spheres.map((pos, index) => (
-        <Sphere key={index} position={pos} />
-      ))}
-      <OrbitControls camera={cameraRef.current} />
+      {/* Куб */}
+      <mesh>
+        <boxGeometry args={[cubeSize, cubeSize, cubeSize]} />
+        <meshBasicMaterial color="gray" wireframe />
+      </mesh>
+
+      {/* Шар с отсечением */}
+      <mesh ref={sphereRef} position={[0, 0, 0]}>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshBasicMaterial
+          color="red"
+          clippingPlanes={clippingPlanes}
+          clipShadows={true}
+        />
+      </mesh>
     </>
   );
-}
+};
 
-function Proba() {
-  const cameraRef = useRef();
+const App = () => (
+  <Canvas>
+    <CubeWithClipping />
+  </Canvas>
+);
 
-  return (
-    <Canvas style={{ height: '100vh' }}>
-     <PerspectiveCamera ref={cameraRef} makeDefault fov={75} position={[0, 12, 5]} />
-      <Scene cameraRef={cameraRef} />
-    </Canvas>
-  );
-}
-
-export default Proba;
+export default App;

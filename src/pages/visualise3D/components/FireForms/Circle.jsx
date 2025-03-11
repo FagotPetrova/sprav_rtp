@@ -1,17 +1,16 @@
-import React, { useRef } from 'react';
 
-const Circle = ({ position, radius }) => {
-    const circleRef = useRef(); // Создаем ссылку на mesh
+import {forwardRef} from "react";
 
+const Circle = forwardRef(({ position, radius }, ref) => {
     return (
         <mesh
-            ref={circleRef}
+            ref={ref} // Используем переданный реф
             position={position}
             rotation={[-Math.PI / 2, 0, 0]}>
             <circleGeometry args={[radius, 64]} /> {/* 64 - количество сегментов */}
             <meshStandardMaterial color="red" />
         </mesh>
     );
-};
+});
 
 export default Circle;
