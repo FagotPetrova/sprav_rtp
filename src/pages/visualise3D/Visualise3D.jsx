@@ -9,8 +9,7 @@ import Toggle from "./components/Toogle";
 
 import Camera from "./components/Camera";
 import OrbitControlsComponent from "./components/OrbitControlsComponent";
-import TestPlane from "./components/TestPlane";
-import TestCube from "./components/TestCube";
+
 
 const Visualise3D = () => {
     const cameraRef = useRef(); // Создаем ref для камеры
@@ -25,9 +24,7 @@ const Visualise3D = () => {
                 {/* Компоненты комнаты */}
 
                 <Room  cameraRef={cameraRef} sceneRef={sceneRef}/>
-                {/*<TestCube/>*/}
-                {/* Компонент огнетушителя */}
-                <FireExtinguisher/>
+
             </Canvas>
         </ViewProvider>
     );

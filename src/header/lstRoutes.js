@@ -4,7 +4,9 @@ import Visualise3D from "../pages/visualise3D/Visualise3D";
 import RequestFireCard from "../pages/STP 2.0/save_request/components/RequestFireCard";
 import Error from "../pages/Error/Error";
 import Login from "../pages/Login/Login";
-import Proba from "../pages/visualise3D/proba"; // Импортируйте компонент ошибки, если он у вас есть
+
+
+
 
 export const privateRoutes = {
     "Методики": [
@@ -14,7 +16,7 @@ export const privateRoutes = {
     ],
     "3D": [
         { name: "ППР.Огнетушители", link: "/three_js", element: <Visualise3D /> },
-        { name: "Нефтехранилище", link: "/proba", element: <Proba/> }
+        { name: "Нефтехранилище", link: "/proba", element: <Visualise3D /> }
     ],
     "Справочник РТП": [
         { name: "Раздел 2", link: "#", element: null },

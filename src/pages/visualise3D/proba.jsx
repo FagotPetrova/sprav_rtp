@@ -1,55 +1,34 @@
-import React, { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useRef, useState, useEffect } from 'react';
+import { CSG } from 'three-csg-ts';
 
-const CubeWithClipping = () => {
-  const cubeSize = 5; // Размер куба
-  const sphereRef = useRef();
+const Box = () => {
+  const $mesh = useRef();
+  const $box = useRef();
+  const $sub = useRef();
+  const [color] = useState('#8ccbde'); // Цвет по умолчанию
+  const [boxScale] = useState(0.6); // Масштаб по умолчанию
+  const [geo, setGeo] = useState();
 
-  // Создаем шесть плоскостей отсечения для граней куба
-  const clippingPlanes = [
-    new THREE.Plane(new THREE.Vector3(1, 0, 0), cubeSize / 2),   // Правая грань
-    new THREE.Plane(new THREE.Vector3(-1, 0, 0), -cubeSize / 2), // Левая грань
-    new THREE.Plane(new THREE.Vector3(0, 1, 0), cubeSize / 2),   // Верхняя грань
-    new THREE.Plane(new THREE.Vector3(0, -1, 0), -cubeSize / 2),  // Нижняя грань
-    new THREE.Plane(new THREE.Vector3(0, 0, 1), cubeSize / 2),    // Передняя грань
-    new THREE.Plane(new THREE.Vector3(0, 0, -1), -cubeSize / 2)   // Задняя грань
-  ];
-
-  // Анимация увеличения шара
-  useFrame(() => {
-    if (sphereRef.current) {
-      sphereRef.current.scale.x += 0.01;
-      sphereRef.current.scale.y += 0.01;
-      sphereRef.current.scale.z += 0.01;
-    }
-  });
+  useEffect(() => {
+    // Вычисляем пересечение один раз при монтировании компонента
+    const sub = CSG.intersect($mesh.current, $box.current);
+    setGeo(sub.geometry);
+  }, []);
 
   return (
-    <>
-      {/* Куб */}
-      <mesh>
-        <boxGeometry args={[cubeSize, cubeSize, cubeSize]} />
-        <meshBasicMaterial color="gray" wireframe />
+    <group>
+      <mesh ref={$mesh} visible={false}>
+        <icosahedronGeometry args={[1, 2]} />
       </mesh>
-
-      {/* Шар с отсечением */}
-      <mesh ref={sphereRef} position={[0, 0, 0]}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshBasicMaterial
-          color="red"
-          clippingPlanes={clippingPlanes}
-          clipShadows={true}
-        />
+      <mesh ref={$box} visible={true}>
+        <boxGeometry args={[boxScale, 2, 2]} />
+        <meshBasicMaterial wireframe={true} />
       </mesh>
-    </>
+      <mesh ref={$sub} geometry={geo} receiveShadow castShadow>
+        <meshStandardMaterial color={color} flatShading />
+      </mesh>
+    </group>
   );
 };
 
-const App = () => (
-  <Canvas>
-    <CubeWithClipping />
-  </Canvas>
-);
-
-export default App;
+export default Box;
